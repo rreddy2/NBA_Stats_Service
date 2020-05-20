@@ -1,6 +1,6 @@
 import flask
 from flask import request, jsonify
-from scraping import scrape_wiki
+from scraping import scrape_wiki_yearly,scrape_wiki_career
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -16,7 +16,16 @@ def home():
 @app.route('/api/v1/CareerYearByYear', methods=['GET'])
 def api_CareerYearByYear():
     player_name = request.args.get('name')
-    result = scrape_wiki(player_name)
+    result = scrape_wiki_yearly(player_name)
     return jsonify(result)
+
+# A route to get career totals for both regular season and
+# playoffs in one JSON object
+@app.route('/api/v1/CareerTotals', methods=['GET'])
+def api_CareerTotals():
+    player_name = request.args.get('name')
+    result = scrape_wiki_career(player_name)
+    return jsonify(result)
+
 
 app.run()
