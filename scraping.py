@@ -10,6 +10,7 @@ def checkForNone(s):
     else:
         return str(s.text)
 
+# rows have different indexes
 def parseRow(row):
     elements = (row.find_all('td'))
     obj = {}
@@ -46,6 +47,7 @@ def parseRow(row):
             obj['ppg'] = str(elements[8].text.replace('\n',''))
     return obj
 
+# rows have different indexes
 def parseRowCareer(row):
     elements = (row.find_all('td'))
     obj = {}
@@ -71,6 +73,7 @@ def parseRowCareer(row):
         obj['ppg'] = str(elements[7].text.replace('\n', ''))
     return obj
 
+# only remove the all star (if there) and career rows
 def parseTableYearByYear(t, playoffFlag):
     rows = t.find_all('tr')
     rows = rows[1:]
@@ -96,6 +99,7 @@ def parseTableYearByYear(t, playoffFlag):
 
     return obj
 
+# remove all the rows that aren't Career
 def parseTableCareer(t):
     rows = t.find_all('tr')
     # remove the column headers
@@ -158,13 +162,15 @@ def scrape_wiki_career(search):
     if len(statsTables) == 0:
         statsTables = load_websites(search + '_(basketball)')
 
-    regularSeason = statsTables[0]
-    # check if player went to the playoffs
-    playoffs = statsTables[1]
-
     result = {}
 
-    result["regular_season"] = parseTableCareer(regularSeason)
-    result["playoffs"] = parseTableCareer(playoffs)    
+    if len(statsTables) == 1:
+        regularSeason = statsTables[0]
+        result["regular_season"] = parseTableCareer(regularSeason)
+    else:
+        regularSeason = statsTables[0]
+        playoffs = statsTables[1]
+        result["regular_season"] = parseTableCareer(regularSeason)
+        result["playoffs"] = parseTableCareer(playoffs)  
 
     return result
