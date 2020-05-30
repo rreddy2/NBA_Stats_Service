@@ -218,23 +218,26 @@ def scrape_wiki_yearly(search):
 		result['regular_season'] = parseTableYearByYear(regularSeason, False)
 		playoffsList = parseTableYearByYear(playoffs, True)
 		# Trying to fill in empty playoff years with zeros
-		j = 0
-		for elem in result['regular_season']:
-			if playoffsList[j]['year'][2:] == elem['year'][3:]:
-				j+=1
-			else:
-				if int(elem['year'][3:]) < 50:
-					temp = '20' + str(elem['year'][3:])
+		emptyPlayoffs = {}
+		for i in range(len(result['regular_season'])):
+			madePlayoffs = False
+			for j in range(len(playoffsList)):
+				if result['regular_season'][i]['year'][3:] == playoffsList[j]['year'][2:]:
+					madePlayoffs = True
+			if not madePlayoffs:
+				if int(result['regular_season'][i]['year'][3:]) < 50:
+					temp = '20' + str(result['regular_season'][i]['year'][3:])
 				else:
-					temp = '19' + str(elem['year'][3:])
-				playoffsList.append({
+					temp = '19' + str(result['regular_season'][i]['year'][3:])
+				emptyPlayoffs[temp] = result['regular_season'][i]['team']
+		for k in emptyPlayoffs:
+			playoffsList.append({
 					'ppg': '0', 'apg': '0', 'rpg': '0', 'spg': '0', 'bpg': '0', 
-					'fg': '0', 'ft': '0', 'three': '0', 'team': elem['team'], 'gp': '0', 
-					'gs': '0', 'mpg': '0', 'year': temp
+					'fg': '0', 'ft': '0', 'three': '0', 'team': emptyPlayoffs[k], 'gp': '0', 
+					'gs': '0', 'mpg': '0', 'year': k
 				})
 		playoffsList.sort(key=operator.itemgetter('year'))
 		result['playoffs'] = playoffsList
-	
 	return result
 
 def scrape_wiki_career(search):
