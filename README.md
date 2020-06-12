@@ -7,6 +7,7 @@ This is a Python API service that can retrieve NBA statistics from Wikipedia
 In order to run it locally:
 
 > git clone https://github.com/rreddy2/NBA_Stats_Service
+
 > python backendAPI.py
 
 Once it's up and running, the base URL would be: http://127.0.0.1:5000/
