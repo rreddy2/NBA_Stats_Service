@@ -1,6 +1,6 @@
 import flask
 from flask import request, jsonify
-from scraping import scrape_wiki_yearly,scrape_wiki_career
+from playerStatsScraping import scrape_wiki_yearly,scrape_wiki_career
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
